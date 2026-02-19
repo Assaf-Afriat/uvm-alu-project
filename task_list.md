@@ -1,0 +1,21 @@
+# UVM Verification Project
+
+- [ ] Design DUT (Simple ALU with Handshake) <!-- id: 0 -->
+    - [x] Refine DUT Specification (Handshake, Latency, Backpressure) <!-- id: 18 -->
+    - [ ] Create `dut.sv` <!-- id: 1 -->
+- [ ] Plan UVM Architecture <!-- id: 2 -->
+    - [x] Create `implementation_plan.md` <!-- id: 3 -->
+- [ ] Implement UVM Environment <!-- id: 4 -->
+    - [ ] Transaction Item (`alu_item`) <!-- id: 5 -->
+    - [ ] Interface (`alu_if`) <!-- id: 6 -->
+    - [ ] Driver (`alu_driver`) <!-- id: 7 -->
+    - [ ] Monitor (`alu_monitor`) <!-- id: 8 -->
+    - [ ] Sequencer (`alu_sequencer`) <!-- id: 9 -->
+    - [ ] Agent (`alu_agent`) <!-- id: 10 -->
+    - [ ] Scoreboard (`alu_scoreboard`) <!-- id: 11 -->
+    - [ ] Environment (`alu_env`) <!-- id: 12 -->
+    - [ ] Test (`alu_test`) <!-- id: 13 -->
+    - [ ] Top (`tb_top`) <!-- id: 14 -->
+- [ ] Run and Verify <!-- id: 15 -->
+    - [ ] Create simulation script <!-- id: 16 -->
+    - [ ] Verify results <!-- id: 17 -->

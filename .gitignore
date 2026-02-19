@@ -1,0 +1,32 @@
+# Vivado / Simulation Artifacts
+*.jou
+*.log
+*.pb
+*.wlf
+*.vcd
+*.vvp
+*.str
+*.txt
+.Xil/
+vivado_proj/
+xsim.dir/
+
+# Icarus / Other Simulators
+work/
+transcript
+modelsim.ini
+
+# Downloaded Libraries (use get_uvm.py to restore)
+scripts/uvm-1.2/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
