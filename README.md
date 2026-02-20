@@ -6,7 +6,7 @@ A complete, production-quality **UVM verification environment** for an 8-bit ALU
 
 ## ▶ Live Project Demo
 
-🔗 **Interactive HTML demo:** https://assaf-afriat.github.io/alu-uvm-verification/docs/project_demo.html
+🔗 **Interactive HTML demo:** https://assaf-afriat.github.io/uvm-alu-verification/docs/project_demo.html
 
 ---
 
