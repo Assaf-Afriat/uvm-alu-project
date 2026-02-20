@@ -1,4 +1,4 @@
-# QuestaSim Compile Script for CPM Verification
+# QuestaSim Compile Script for UVM ALU Verification
 # Usage: vsim -c -do compile.do
 # Note: Run this script from the scripts/Run directory
 # It will change to project root (../../) before compiling
@@ -10,21 +10,17 @@ cd ../..
 vlib sim/work
 vmap work sim/work
 
-# Compile parameters package
-vlog -sv -work work +incdir+verification/pkg verification/pkg/CpmParamsPkg.sv
-
-# Compile interfaces
-vlog -sv -work work +incdir+verification/interfaces verification/interfaces/CpmStreamIf.sv
-vlog -sv -work work +incdir+verification/interfaces verification/interfaces/CpmRegIf.sv
+# Compile interface
+vlog -sv -work work +incdir+interface interface/alu_if.sv
 
 # Compile DUT with CODE COVERAGE enabled
 # +cover=bcesft enables: branch, condition, expression, statement, fsm, toggle
-vlog -sv -work work +cover=bcesft +incdir+cpm_design cpm_design/cpm_rtl.sv
+vlog -sv -work work +cover=bcesft +incdir+dut dut/dut.sv
 
-# Compile test package (includes all components)
-vlog -sv -work work +incdir+verification/pkg +incdir+verification verification/pkg/CpmTestPkg.sv
+# Compile SVA Assertions
+vlog -sv -work work +incdir+sva sva/alu_assertions.sv
 
-# Compile testbench top
-vlog -sv -work work +incdir+verification verification/tb_top.sv
+# Compile testbench top (includes alu_pkg.sv which includes all UVM components)
+vlog -sv -work work +incdir+. +incdir+agent +incdir+env +incdir+scoreboard +incdir+sequences +incdir+test tb_top.sv
 
 quit -force

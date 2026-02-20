@@ -2,9 +2,13 @@
 // UVM Monitor
 // Observes the DUT interface and broadcasts transactions.
 // Handles Pipelined Request/Response independently.
+// Supports callbacks for post_req_capture and post_resp_capture hooks.
 
 class alu_monitor extends uvm_monitor;
     `uvm_component_utils(alu_monitor)
+    
+    // Register callback type
+    `uvm_register_cb(alu_monitor, alu_callback_base)
 
     virtual alu_if vif;
     
@@ -39,14 +43,19 @@ class alu_monitor extends uvm_monitor;
             @ (posedge vif.clk);
             // Check for valid handshake (Valid=1 AND Ready=1)
             if (vif.req_valid && vif.req_ready) begin
+                bit drop = 0;
                 alu_item item = alu_item::type_id::create("req_item");
                 item.op  = vif.req_op;
                 item.op1 = vif.req_op1;
                 item.op2 = vif.req_op2;
                 
-                req_port.write(item);
+                // Post-capture callback - can filter transactions
+                `uvm_do_callbacks(alu_monitor, alu_callback_base, post_req_capture(this, item, drop))
                 
-                `uvm_info("MON_REQ", $sformatf("Saw Request: %s", item.convert2string()), UVM_HIGH)
+                if (!drop) begin
+                    req_port.write(item);
+                    `uvm_info("MON_REQ", $sformatf("Saw Request: %s", item.convert2string()), UVM_HIGH)
+                end
             end
         end
     endtask
@@ -57,12 +66,17 @@ class alu_monitor extends uvm_monitor;
             @ (posedge vif.clk);
             // Check for valid handshake
             if (vif.resp_valid && vif.resp_ready) begin
+                bit drop = 0;
                 alu_item item = alu_item::type_id::create("resp_item");
                 item.result = vif.resp_result;
                 
-                resp_port.write(item);
-
-                `uvm_info("MON_RESP", $sformatf("Saw Response: Result=%0d", item.result), UVM_HIGH)
+                // Post-capture callback - can filter transactions
+                `uvm_do_callbacks(alu_monitor, alu_callback_base, post_resp_capture(this, item, drop))
+                
+                if (!drop) begin
+                    resp_port.write(item);
+                    `uvm_info("MON_RESP", $sformatf("Saw Response: Result=%0d", item.result), UVM_HIGH)
+                end
             end
         end
     endtask

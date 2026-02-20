@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALU UVM Verification Project - Complete Technical Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-code: #0d1117;
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6a6a7a;
+            --accent: #6366f1;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --border: #2a2a38;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 100;
+            padding: 30px 20px;
+        }
+
+        .sidebar-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .sidebar-version {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 25px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(59,130,246,0.1));
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+        }
+
+        .nav-link .nav-icon {
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+
+        .nav-link .nav-badge {
+            float: right;
+            background: var(--accent-green);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 320px;
+            padding: 50px 80px;
+            max-width: 1400px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 60px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 700px;
+        }
+
+        .hero-version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.1));
+            border: 1px solid var(--accent-green);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-bottom: 25px;
+        }
+
+        .hero-version-badge .pulse {
+            width: 10px;
+            height: 10px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-value.green { color: var(--accent-green); }
+        .stat-value.blue { color: var(--accent-blue); }
+        .stat-value.yellow { color: var(--accent-yellow); }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .section h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            color: var(--text-primary);
+        }
+
+        .section h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            color: var(--accent-blue);
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 800px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .card-icon.blue { background: rgba(59,130,246,0.2); }
+        .card-icon.green { background: rgba(16,185,129,0.2); }
+        .card-icon.purple { background: rgba(139,92,246,0.2); }
+        .card-icon.yellow { background: rgba(245,158,11,0.2); }
+        .card-icon.red { background: rgba(239,68,68,0.2); }
+        .card-icon.cyan { background: rgba(6,182,212,0.2); }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Code Blocks - FIXED: Added white-space: pre-wrap */
+        .code-block {
+            background: var(--bg-code);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-block code {
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-comment { color: #6a9955; }
+        .code-keyword { color: #569cd6; }
+        .code-type { color: #4ec9b0; }
+        .code-string { color: #ce9178; }
+        .code-number { color: #b5cea8; }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--bg-card);
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(99,102,241,0.05);
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-green { background: rgba(16,185,129,0.2); color: var(--accent-green); }
+        .badge-blue { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
+        .badge-purple { background: rgba(139,92,246,0.2); color: var(--accent-purple); }
+        .badge-yellow { background: rgba(245,158,11,0.2); color: var(--accent-yellow); }
+        .badge-red { background: rgba(239,68,68,0.2); color: var(--accent-red); }
+        .badge-cyan { background: rgba(6,182,212,0.2); color: var(--accent-cyan); }
+
+        /* Lists */
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        /* Highlights */
+        .highlight {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(59,130,246,0.05));
+            border-left: 4px solid var(--accent);
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+        }
+
+        .highlight.success {
+            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.05));
+            border-left-color: var(--accent-green);
+        }
+
+        .highlight.warning {
+            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+            border-left-color: var(--accent-yellow);
+        }
+
+        .highlight-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .highlight.success .highlight-title { color: var(--accent-green); }
+        .highlight.warning .highlight-title { color: var(--accent-yellow); }
+
+        /* Phase Cards */
+        .phase-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(99,102,241,0.1);
+        }
+
+        .phase-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .phase-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 10px 0;
+            color: var(--text-primary);
+        }
+
+        .phase-description {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Metric Cards */
+        .metric-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+        }
+
+        .metric-value {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .metric-detail {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* File Tree */
+        .file-tree {
+            background: var(--bg-code);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .file-tree-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .file-tree-indent {
+            color: var(--text-muted);
+            margin-right: 8px;
+            white-space: pre;
+        }
+
+        .file-tree-name {
+            color: var(--text-primary);
+        }
+
+        .file-tree-name.folder {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .file-tree-comment {
+            color: #6a9955;
+            margin-left: 15px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 280px;
+            }
+            .main-content {
+                margin-left: 280px;
+                padding: 40px 50px;
+            }
+            .grid-4, .grid-5 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 30px;
+            }
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Author Badge */
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.1));
+            border: 1px solid var(--accent-purple);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent-purple);
+            font-weight: 500;
+        }
+
+        .footer-signature {
+            text-align: center;
+            padding: 60px 40px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.02));
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">ALU Verification</div>
+            <div class="sidebar-subtitle">Complete UVM Verification Environment</div>
+            <div class="sidebar-version">UVM 1.2 | QuestaSim</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="#introduction" class="nav-link active"><span class="nav-icon">📋</span>Introduction</a>
+            <a href="#dut" class="nav-link"><span class="nav-icon">💻</span>DUT Overview</a>
+            <a href="#features" class="nav-link"><span class="nav-icon">⭐</span>Key Features</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Implementation</div>
+            <a href="#uvm-components" class="nav-link"><span class="nav-icon">🔧</span>UVM Components</a>
+            <a href="#sequences" class="nav-link"><span class="nav-icon">🔄</span>Sequences</a>
+            <a href="#callbacks" class="nav-link"><span class="nav-icon">🔗</span>Callbacks<span class="nav-badge">NEW</span></a>
+            <a href="#sva" class="nav-link"><span class="nav-icon">✓</span>SVA Assertions</a>
+            <a href="#coverage" class="nav-link"><span class="nav-icon">📊</span>Coverage</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Tests</div>
+            <a href="#tests" class="nav-link"><span class="nav-icon">🧪</span>Test Suite</a>
+            <a href="#regression" class="nav-link"><span class="nav-icon">🚀</span>Regression</a>
+            <a href="#backpressure" class="nav-link"><span class="nav-icon">🚦</span>Backpressure</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Reference</div>
+            <a href="#file-structure" class="nav-link"><span class="nav-icon">📁</span>File Structure</a>
+            <a href="#commands" class="nav-link"><span class="nav-icon">💻</span>Run Commands</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="introduction">
+            <div class="hero-version-badge">
+                <span class="pulse"></span>
+                <span style="font-weight: 600; color: var(--accent-green);">Full UVM Environment Complete</span>
+            </div>
+            <h1>ALU UVM Verification Project</h1>
+            <p style="margin-bottom: 22px;">
+                <a href="https://github.com/Assaf-Afriat/alu-uvm-verification" target="_blank"
+                   style="display:inline-flex;align-items:center;gap:8px;color:var(--accent-blue);text-decoration:none;font-size:15px;font-weight:600;background:rgba(59,130,246,.1);padding:8px 18px;border-radius:10px;border:1px solid rgba(59,130,246,.3);transition:all .2s;"
+                   onmouseover="this.style.background='rgba(59,130,246,.2)'" onmouseout="this.style.background='rgba(59,130,246,.1)'">
+                    <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    View on GitHub
+                </a>
+            </p>
+            <p class="hero-subtitle">
+                A complete, production-quality UVM verification environment for an 8-bit ALU with variable latency, 
+                output FIFO, and backpressure support. Demonstrates advanced verification techniques including 
+                callbacks, SVA assertions, and functional coverage.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-value green">8</div>
+                    <div class="stat-label">Operations</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value blue">6</div>
+                    <div class="stat-label">Test Types</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value yellow">11</div>
+                    <div class="stat-label">SVA Assertions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value green">8</div>
+                    <div class="stat-label">Covergroups</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value purple">10</div>
+                    <div class="stat-label">Callbacks</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DUT Overview Section -->
+        <section class="section" id="dut">
+            <div class="section-header">
+                <h2>💻 DUT Overview</h2>
+                <p class="section-description">
+                    The Design Under Test is an 8-bit ALU with valid/ready handshaking, variable latency execution, 
+                    and a 4-entry output FIFO.
+                </p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue">⚙</div>
+                        <div>
+                            <div class="card-title">ALU Operations</div>
+                            <div class="card-subtitle">8 Supported Operations</div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table style="font-size: 13px;">
+                            <tr><th>Opcode</th><th>Operation</th><th>Latency</th></tr>
+                            <tr><td><code>000</code></td><td>ADD</td><td>2 cycles</td></tr>
+                            <tr><td><code>001</code></td><td>SUB</td><td>2 cycles</td></tr>
+                            <tr><td><code>010</code></td><td>MUL</td><td>4 cycles</td></tr>
+                            <tr><td><code>011</code></td><td>AND</td><td>2 cycles</td></tr>
+                            <tr><td><code>100</code></td><td>XOR</td><td>2 cycles</td></tr>
+                            <tr><td><code>101</code></td><td>SLL (Shift Left)</td><td>2 cycles</td></tr>
+                            <tr><td><code>110</code></td><td>SRL (Shift Right)</td><td>2 cycles</td></tr>
+                            <tr><td><code>111</code></td><td>DIV</td><td>8 cycles</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">🔌</div>
+                        <div>
+                            <div class="card-title">Interface Signals</div>
+                            <div class="card-subtitle">Valid/Ready Protocol</div>
+                        </div>
+                    </div>
+                    <h4 style="font-size: 14px; margin: 15px 0 10px;">Request Interface</h4>
+                    <ul style="font-size: 13px; margin: 0 0 15px 20px;">
+                        <li><code>req_valid</code> - Request valid signal</li>
+                        <li><code>req_ready</code> - DUT ready to accept</li>
+                        <li><code>req_op[2:0]</code> - Operation code</li>
+                        <li><code>req_op1[7:0]</code> - Operand A</li>
+                        <li><code>req_op2[7:0]</code> - Operand B</li>
+                    </ul>
+                    <h4 style="font-size: 14px; margin: 15px 0 10px;">Response Interface</h4>
+                    <ul style="font-size: 13px; margin: 0 0 0 20px;">
+                        <li><code>resp_valid</code> - Response valid signal</li>
+                        <li><code>resp_ready</code> - TB ready to accept</li>
+                        <li><code>resp_result[15:0]</code> - Computed result</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <div class="highlight-title">💡 Key Design Features</div>
+                <ul style="margin: 0; font-size: 14px;">
+                    <li><strong>Variable Latency:</strong> Different operations take different clock cycles (2-8 cycles)</li>
+                    <li><strong>Output FIFO:</strong> 4-entry FIFO buffers results when consumer is slow</li>
+                    <li><strong>Backpressure:</strong> DUT blocks inputs when FIFO is full</li>
+                    <li><strong>Division by Zero:</strong> Returns <code>0xFFFF</code> as error value</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Key Features Section -->
+        <section class="section" id="features">
+            <div class="section-header">
+                <h2>⭐ Key Features & Skills Demonstrated</h2>
+                <p class="section-description">
+                    This verification environment showcases industry-standard UVM methodologies and advanced verification techniques.
+                </p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card" style="border-top: 4px solid var(--accent-green);">
+                    <div class="card-header">
+                        <div class="card-icon green">✓</div>
+                        <div>
+                            <div class="card-title">UVM Methodology</div>
+                            <div class="card-subtitle">Standard Components</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li>Complete Agent (Driver, Monitor, Sequencer)</li>
+                        <li>Environment with Scoreboard</li>
+                        <li>Factory Pattern for Extensibility</li>
+                        <li>TLM Analysis Ports</li>
+                        <li>Objection Mechanism</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-blue);">
+                    <div class="card-header">
+                        <div class="card-icon blue">📊</div>
+                        <div>
+                            <div class="card-title">Coverage-Driven</div>
+                            <div class="card-subtitle">Comprehensive Coverage</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li>8 Covergroups with Cross Coverage</li>
+                        <li>Corner Case Targeting</li>
+                        <li>Coverage-Driven Sequences</li>
+                        <li>Result Range Coverage</li>
+                        <li>QuestaSim Coverage Reports</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-purple);">
+                    <div class="card-header">
+                        <div class="card-icon purple">🔗</div>
+                        <div>
+                            <div class="card-title">Callbacks</div>
+                            <div class="card-subtitle">Extensible Hooks</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li>Driver Callbacks (Log, Drop, Delay)</li>
+                        <li>Monitor Callbacks (Stats, Protocol)</li>
+                        <li>Scoreboard Callbacks (Track, Compare)</li>
+                        <li>Error Injection Support</li>
+                        <li>Runtime Statistics</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-yellow);">
+                    <div class="card-header">
+                        <div class="card-icon yellow">✓</div>
+                        <div>
+                            <div class="card-title">SVA Assertions</div>
+                            <div class="card-subtitle">Protocol Verification</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li>Valid/Ready Protocol Checks</li>
+                        <li>Data Stability Assertions</li>
+                        <li>Reset Behavior Verification</li>
+                        <li>Latency & Deadlock Detection</li>
+                        <li>Detailed Pass/Fail Reporting</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-cyan);">
+                    <div class="card-header">
+                        <div class="card-icon cyan">🔄</div>
+                        <div>
+                            <div class="card-title">Sequence Library</div>
+                            <div class="card-subtitle">Reusable Sequences</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li>Base Random Sequence</li>
+                        <li>Stress Sequence (500+ txns)</li>
+                        <li>Coverage-Driven Sequence</li>
+                        <li>Virtual Regression Sequence</li>
+                        <li>Configurable Parameters</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-red);">
+                    <div class="card-header">
+                        <div class="card-icon red">🚦</div>
+                        <div>
+                            <div class="card-title">Backpressure Testing</div>
+                            <div class="card-subtitle">Flow Control Verification</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li>Random <code>resp_ready</code> Deassertion</li>
+                        <li>Configurable Pressure Level</li>
+                        <li>Statistics Tracking</li>
+                        <li>Protocol Compliance Under Stress</li>
+                        <li>FIFO Full Conditions</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- UVM Components Section -->
+        <section class="section" id="uvm-components">
+            <div class="section-header">
+                <h2>🔧 UVM Component Hierarchy</h2>
+                <p class="section-description">
+                    Complete UVM component hierarchy showing the relationship between all verification components.
+                </p>
+            </div>
+
+            <!-- Test Level -->
+            <div class="card" style="border: 2px solid var(--accent-purple); background: linear-gradient(135deg, rgba(139,92,246,0.1), transparent); margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <span style="font-size: 20px;">🧪</span>
+                    <div>
+                        <div style="font-weight: 700; color: var(--accent-purple);">uvm_test_top</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">alu_test | alu_stress_test | alu_coverage_test | alu_regression_test | alu_callback_test | alu_full_regression_test</div>
+                    </div>
+                </div>
+                
+                <!-- Environment Level -->
+                <div class="card" style="border: 2px solid var(--accent); margin: 0;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <span style="font-size: 18px;">🏗</span>
+                        <div>
+                            <div style="font-weight: 700; color: var(--accent);">env (alu_env)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Agent -->
+                    <div class="grid-2" style="margin-bottom: 20px;">
+                        <div style="background: var(--bg-secondary); border-radius: 10px; padding: 15px; border-left: 4px solid var(--accent-blue);">
+                            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 12px;">📦 agent (alu_agent)</div>
+                            <div style="display: flex; flex-direction: column; gap: 8px; padding-left: 15px;">
+                                <div style="background: var(--bg-card); padding: 8px 12px; border-radius: 6px; font-size: 12px;">
+                                    <span style="color: var(--text-primary);">sequencer</span>
+                                </div>
+                                <div style="background: var(--bg-card); padding: 8px 12px; border-radius: 6px; font-size: 12px;">
+                                    <span style="color: var(--text-primary);">driver</span>
+                                    <span class="badge badge-cyan" style="margin-left: 8px; font-size: 9px;">+ Callbacks</span>
+                                </div>
+                                <div style="background: var(--bg-card); padding: 8px 12px; border-radius: 6px; font-size: 12px;">
+                                    <span style="color: var(--text-primary);">monitor</span>
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">
+                                        req_port, resp_port
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Supporting Components -->
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <div style="background: var(--bg-secondary); border-radius: 10px; padding: 15px; border-left: 4px solid var(--accent-yellow);">
+                                <div style="font-weight: 600; color: var(--accent-yellow); margin-bottom: 10px; font-size: 13px;">✓ scoreboard (alu_scoreboard)</div>
+                                <ul style="font-size: 11px; margin: 0; padding-left: 15px;">
+                                    <li>Reference Model</li>
+                                    <li>Pass/Fail Tracking</li>
+                                    <li>Detailed Comparison</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: var(--bg-secondary); border-radius: 10px; padding: 15px; border-left: 4px solid var(--accent-purple);">
+                                <div style="font-weight: 600; color: var(--accent-purple); margin-bottom: 10px; font-size: 13px;">📊 coverage (alu_coverage)</div>
+                                <ul style="font-size: 11px; margin: 0; padding-left: 15px;">
+                                    <li>8 Covergroups</li>
+                                    <li>Request & Response Sampling</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Component Statistics</h3>
+            <div class="grid-5">
+                <div class="card" style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent);">1</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Agent</div>
+                </div>
+                <div class="card" style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent-blue);">1</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Monitor</div>
+                </div>
+                <div class="card" style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent-green);">1</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Scoreboard</div>
+                </div>
+                <div class="card" style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent-purple);">4</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Sequences</div>
+                </div>
+                <div class="card" style="text-align: center; padding: 20px;">
+                    <div style="font-size: 32px; font-weight: 800; color: var(--accent-yellow);">6</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Tests</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sequences Section -->
+        <section class="section" id="sequences">
+            <div class="section-header">
+                <h2>🔄 Sequence Library</h2>
+                <p class="section-description">
+                    Complete sequence library with base, stress, coverage, and virtual sequences for comprehensive testing.
+                </p>
+            </div>
+
+            <h3>Virtual Sequence Flow (Regression)</h3>
+            <div class="grid-4" style="margin-bottom: 30px;">
+                <div class="phase-card" style="border-top: 4px solid var(--accent);">
+                    <div class="phase-number" style="font-size: 24px;">1</div>
+                    <div class="phase-title" style="font-size: 14px;">Base Sequence</div>
+                    <div class="phase-description" style="font-size: 12px;">50 random transactions</div>
+                </div>
+                <div class="phase-card" style="border-top: 4px solid var(--accent-yellow);">
+                    <div class="phase-number" style="font-size: 24px;">2</div>
+                    <div class="phase-title" style="font-size: 14px;">Stress Sequence</div>
+                    <div class="phase-description" style="font-size: 12px;">200+ corner cases</div>
+                </div>
+                <div class="phase-card" style="border-top: 4px solid var(--accent-green);">
+                    <div class="phase-number" style="font-size: 24px;">3</div>
+                    <div class="phase-title" style="font-size: 14px;">Coverage Sequence</div>
+                    <div class="phase-description" style="font-size: 12px;">1000+ targeted txns</div>
+                </div>
+                <div class="phase-card" style="border-top: 4px solid var(--accent-purple);">
+                    <div class="phase-number" style="font-size: 24px;">4</div>
+                    <div class="phase-title" style="font-size: 14px;">Callback Demo</div>
+                    <div class="phase-description" style="font-size: 12px;">Optional statistics</div>
+                </div>
+            </div>
+
+            <h3>Sequence Types</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue">📋</div>
+                        <div>
+                            <div class="card-title">alu_basesequence</div>
+                            <div class="card-subtitle">Random Stimulus</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">Generates 50 fully randomized transactions with all operations and operand values.</p>
+                    <div class="code-block" style="font-size: 11px;"><span class="code-keyword">class</span> <span class="code-type">alu_basesequence</span> <span class="code-keyword">extends</span> uvm_sequence;
+    rand int num_transactions = 50;
+    <span class="code-comment">// Randomize op, op1, op2 for each transaction</span>
+<span class="code-keyword">endclass</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon yellow">🔥</div>
+                        <div>
+                            <div class="card-title">alu_stress_sequence</div>
+                            <div class="card-subtitle">Stress Testing</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">500+ transactions with corner cases, back-to-back operations, and rapid op switching.</p>
+                    <ul style="font-size: 13px;">
+                        <li>Corner values (0x00, 0x01, 0xFF)</li>
+                        <li>Back-to-back same operations</li>
+                        <li>Rapid operation switching</li>
+                        <li>Division stress (including div-by-zero)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">🎯</div>
+                        <div>
+                            <div class="card-title">alu_coverage_sequence</div>
+                            <div class="card-subtitle">Coverage-Driven</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">Systematically targets all coverage bins with 6 distinct phases.</p>
+                    <ul style="font-size: 13px;">
+                        <li>Phase 1: All ops x corner operands</li>
+                        <li>Phase 2: Division combinations</li>
+                        <li>Phase 3: All shift amounts</li>
+                        <li>Phase 4: Result range targeting</li>
+                        <li>Phase 5: Full cross coverage</li>
+                        <li>Phase 6: Random fill</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple">🚀</div>
+                        <div>
+                            <div class="card-title">alu_regression_sequence</div>
+                            <div class="card-subtitle">Virtual Sequence</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">Orchestrates all sequences in order for comprehensive regression testing.</p>
+                    <div class="code-block" style="font-size: 11px;"><span class="code-comment">// Configuration flags</span>
+bit run_base     = 1;
+bit run_stress   = 1;
+bit run_coverage = 1;
+bit run_callback_demo = 0;</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Callbacks Section -->
+        <section class="section" id="callbacks">
+            <div class="section-header">
+                <h2>🔗 Callback Implementation</h2>
+                <p class="section-description">
+                    Comprehensive callback system for extending driver, monitor, and scoreboard functionality without modifying core code.
+                </p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card" style="border-top: 4px solid var(--accent-blue);">
+                    <div class="card-header">
+                        <div class="card-icon blue">🚗</div>
+                        <div>
+                            <div class="card-title">Driver Callbacks</div>
+                            <div class="card-subtitle">4 Implementations</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><strong>alu_driver_log_cb</strong><br><span style="color: var(--text-muted);">Logs all transactions</span></li>
+                        <li><strong>alu_error_inject_cb</strong><br><span style="color: var(--text-muted);">Corrupts data for error testing</span></li>
+                        <li><strong>alu_delay_inject_cb</strong><br><span style="color: var(--text-muted);">Adds random delays</span></li>
+                        <li><strong>alu_drop_tx_cb</strong><br><span style="color: var(--text-muted);">Drops transactions by %</span></li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-green);">
+                    <div class="card-header">
+                        <div class="card-icon green">👁</div>
+                        <div>
+                            <div class="card-title">Monitor Callbacks</div>
+                            <div class="card-subtitle">3 Implementations</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><strong>alu_stats_cb</strong><br><span style="color: var(--text-muted);">Tracks operation statistics</span></li>
+                        <li><strong>alu_protocol_check_cb</strong><br><span style="color: var(--text-muted);">Real-time protocol validation</span></li>
+                        <li><strong>alu_filter_cb</strong><br><span style="color: var(--text-muted);">Filters specific operations</span></li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-yellow);">
+                    <div class="card-header">
+                        <div class="card-icon yellow">✓</div>
+                        <div>
+                            <div class="card-title">Scoreboard Callbacks</div>
+                            <div class="card-subtitle">4 Implementations</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><strong>alu_compare_log_cb</strong><br><span style="color: var(--text-muted);">Logs comparison results</span></li>
+                        <li><strong>alu_error_detect_cb</strong><br><span style="color: var(--text-muted);">Pattern-based error detection</span></li>
+                        <li><strong>alu_result_modifier_cb</strong><br><span style="color: var(--text-muted);">Modifies expected results</span></li>
+                        <li><strong>alu_op_tracker_cb</strong><br><span style="color: var(--text-muted);">Per-operation tracking</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Callback Architecture</h3>
+            <div class="code-block"><span class="code-comment">// Base callback class (alu_callback_base.sv)</span>
+<span class="code-keyword">class</span> <span class="code-type">alu_callback_base</span> <span class="code-keyword">extends</span> uvm_callback;
+
+    <span class="code-keyword">virtual function void</span> pre_drive(uvm_component drv, alu_item item, <span class="code-keyword">ref</span> bit drop);
+    <span class="code-keyword">endfunction</span>
+
+    <span class="code-keyword">virtual function void</span> post_drive(uvm_component drv, alu_item item);
+    <span class="code-keyword">endfunction</span>
+
+    <span class="code-keyword">virtual function void</span> post_req_capture(uvm_component mon, alu_item item, <span class="code-keyword">ref</span> bit drop);
+    <span class="code-keyword">endfunction</span>
+
+    <span class="code-keyword">virtual function void</span> post_resp_capture(uvm_component mon, alu_item item, <span class="code-keyword">ref</span> bit drop);
+    <span class="code-keyword">endfunction</span>
+
+    <span class="code-keyword">virtual function void</span> pre_compare(uvm_component sb, alu_item exp, alu_item act);
+    <span class="code-keyword">endfunction</span>
+
+    <span class="code-keyword">virtual function void</span> post_compare(uvm_component sb, alu_item exp, alu_item act, bit match);
+    <span class="code-keyword">endfunction</span>
+
+<span class="code-keyword">endclass</span></div>
+
+            <div class="highlight success">
+                <div class="highlight-title">🎯 Callback Registration Example</div>
+                <div class="code-block" style="margin: 0; font-size: 12px;"><span class="code-comment">// In test connect_phase</span>
+uvm_callbacks#(alu_driver, alu_callback_base)::add(env.agent.driver, drv_log_cb);
+uvm_callbacks#(alu_driver, alu_callback_base)::add(env.agent.driver, drop_cb);
+uvm_callbacks#(alu_monitor, alu_callback_base)::add(env.agent.monitor, stats_cb);</div>
+            </div>
+        </section>
+
+        <!-- SVA Assertions Section -->
+        <section class="section" id="sva">
+            <div class="section-header">
+                <h2>✓ SVA Assertions</h2>
+                <p class="section-description">
+                    11 SystemVerilog Assertions for protocol verification, reset behavior, latency, and FIFO integrity.
+                </p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">✓</div>
+                        <div>
+                            <div class="card-title">Protocol Assertions</div>
+                            <div class="card-subtitle">Valid/Ready Stability</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><code>p_req_valid_stable</code> - req_valid stable until handshake</li>
+                        <li><code>p_req_data_stable</code> - Request data stable during stall</li>
+                        <li><code>p_resp_valid_stable</code> - resp_valid stable until handshake</li>
+                        <li><code>p_resp_data_stable</code> - Response data stable during stall</li>
+                    </ul>
+                    <div class="badge badge-green" style="margin-top: 10px;">All Passing</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue">🔄</div>
+                        <div>
+                            <div class="card-title">Reset Assertions</div>
+                            <div class="card-subtitle">Post-Reset Behavior</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><code>p_reset_req_ready</code> - req_ready high after reset</li>
+                        <li><code>p_reset_resp_valid</code> - resp_valid low after reset</li>
+                    </ul>
+                    <div class="badge badge-green" style="margin-top: 10px;">All Passing</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon yellow">⏱</div>
+                        <div>
+                            <div class="card-title">Latency & Deadlock</div>
+                            <div class="card-subtitle">Timing Verification</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><code>p_max_latency</code> - Response within 16 cycles</li>
+                        <li><code>p_no_req_deadlock</code> - req_ready within 100 cycles</li>
+                        <li><code>p_no_resp_deadlock</code> - resp_ready within 100 cycles</li>
+                    </ul>
+                    <div class="badge badge-green" style="margin-top: 10px;">All Passing</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple">📊</div>
+                        <div>
+                            <div class="card-title">FIFO Integrity</div>
+                            <div class="card-subtitle">Overflow/Underflow</div>
+                        </div>
+                    </div>
+                    <ul style="font-size: 13px;">
+                        <li><code>p_no_overflow</code> - Pending count ≤ 8</li>
+                        <li><code>p_no_underflow</code> - Pending count ≥ 0</li>
+                    </ul>
+                    <div class="badge badge-green" style="margin-top: 10px;">All Passing</div>
+                </div>
+            </div>
+
+            <h3>Cover Properties</h3>
+            <div class="card">
+                <div class="grid-4">
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 24px; font-weight: 700; color: var(--accent-green);">8</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Operation Covers</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 24px; font-weight: 700; color: var(--accent-blue);">3</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Corner Case Covers</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 24px; font-weight: 700; color: var(--accent-yellow);">2</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Backpressure Covers</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px;">
+                        <div style="font-size: 24px; font-weight: 700; color: var(--accent-purple);">1</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Back-to-Back Cover</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight success">
+                <div class="highlight-title">📊 Assertion Report (End of Simulation)</div>
+                <div class="code-block" style="margin: 0; font-size: 11px;">############################################################
+                 SVA ASSERTION REPORT                       
+############################################################
+
+  SUMMARY:
+    Total Assertions Checked : 15000+
+    Passed                   : 15000+
+    Failed                   : 0
+
+  *** ALL ASSERTIONS PASSED ***
+
+############################################################</div>
+            </div>
+        </section>
+
+        <!-- Coverage Section -->
+        <section class="section" id="coverage">
+            <div class="section-header">
+                <h2>📊 Functional Coverage</h2>
+                <p class="section-description">
+                    8 comprehensive covergroups tracking opcodes, operands, corner cases, and cross coverage.
+                </p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue">⚙</div>
+                        <div>
+                            <div class="card-title">cg_opcode</div>
+                            <div class="card-subtitle">Operation Coverage</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px;">Tracks all 8 ALU operations: ADD, SUB, MUL, AND, XOR, SLL, SRL, DIV</p>
+                    <div class="badge badge-green">8 bins</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">🔢</div>
+                        <div>
+                            <div class="card-title">cg_operand_a / cg_operand_b</div>
+                            <div class="card-subtitle">Operand Value Coverage</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px;">Bins for zero, one, low, mid_low, mid_high, high, and max values</p>
+                    <div class="badge badge-green">65+ bins each</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon yellow">⭐</div>
+                        <div>
+                            <div class="card-title">cg_corner_cases</div>
+                            <div class="card-subtitle">Critical Value Testing</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px;">Cross coverage of all ops with corner values (0, 1, 0xFF, powers of 2)</p>
+                    <div class="badge badge-green">Cross coverage</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple">👉</div>
+                        <div>
+                            <div class="card-title">cg_shift</div>
+                            <div class="card-subtitle">Shift Amount Coverage</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px;">All shift amounts (0-7) crossed with SLL and SRL operations</p>
+                    <div class="badge badge-green">16 cross bins</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon red">➗</div>
+                        <div>
+                            <div class="card-title">cg_division</div>
+                            <div class="card-subtitle">Division Special Cases</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px;">Division with various dividend/divisor combinations including zero</p>
+                    <div class="badge badge-green">25 cross bins</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon cyan">📈</div>
+                        <div>
+                            <div class="card-title">cg_result</div>
+                            <div class="card-subtitle">Result Range Coverage</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px;">Result value ranges from zero to max (0xFFFF)</p>
+                    <div class="badge badge-green">50 bins</div>
+                </div>
+            </div>
+
+            <h3>Full Cross Coverage</h3>
+            <div class="highlight">
+                <div class="highlight-title">cg_full_cross: 8 ops × 3 op1_ranges × 3 op2_ranges = 72 bins</div>
+                <p style="margin: 0; font-size: 14px;">
+                    Ensures all combinations of operations with operand value ranges (low/mid/high) are exercised.
+                </p>
+            </div>
+        </section>
+
+        <!-- Tests Section -->
+        <section class="section" id="tests">
+            <div class="section-header">
+                <h2>🧪 Test Suite</h2>
+                <p class="section-description">
+                    6 specialized tests covering basic functionality, stress testing, coverage, regression, and callbacks.
+                </p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Test Name</th>
+                        <th>Description</th>
+                        <th>Transactions</th>
+                        <th>Focus</th>
+                    </tr>
+                    <tr>
+                        <td><strong>alu_test</strong></td>
+                        <td>Basic random test</td>
+                        <td>50</td>
+                        <td><span class="badge badge-blue">Sanity</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>alu_stress_test</strong></td>
+                        <td>Corner cases, back-to-back ops</td>
+                        <td>500+</td>
+                        <td><span class="badge badge-yellow">Stress</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>alu_coverage_test</strong></td>
+                        <td>Coverage-driven targeting</td>
+                        <td>1000+</td>
+                        <td><span class="badge badge-green">Coverage</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>alu_regression_test</strong></td>
+                        <td>Base + Stress + Coverage</td>
+                        <td>1500+</td>
+                        <td><span class="badge badge-purple">Regression</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>alu_callback_test</strong></td>
+                        <td>Callback demonstration</td>
+                        <td>50</td>
+                        <td><span class="badge badge-cyan">Callbacks</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>alu_full_regression_test</strong></td>
+                        <td>All sequences + all callbacks</td>
+                        <td>1500+</td>
+                        <td><span class="badge badge-red">Full</span></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Regression Section -->
+        <section class="section" id="regression">
+            <div class="section-header">
+                <h2>🚀 Full Regression</h2>
+                <p class="section-description">
+                    The <code>alu_full_regression_test</code> combines all sequences with all callbacks for comprehensive verification.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon purple">🚀</div>
+                    <div>
+                        <div class="card-title">alu_full_regression_test</div>
+                        <div class="card-subtitle">Complete Verification Run</div>
+                    </div>
+                </div>
+
+                <h4>Phases</h4>
+                <ol style="font-size: 14px;">
+                    <li><strong>Base Sequence</strong> - 50 random transactions</li>
+                    <li><strong>Stress Sequence</strong> - 200+ corner cases and stress scenarios</li>
+                    <li><strong>Coverage Sequence</strong> - 1000+ targeted transactions</li>
+                </ol>
+
+                <h4>Active Callbacks</h4>
+                <div class="grid-3" style="margin-top: 15px;">
+                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px;">
+                        <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 8px;">Driver</div>
+                        <ul style="font-size: 12px; margin: 0; padding-left: 15px;">
+                            <li>alu_driver_log_cb</li>
+                            <li>alu_drop_tx_cb (optional)</li>
+                        </ul>
+                    </div>
+                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px;">
+                        <div style="font-weight: 600; color: var(--accent-green); margin-bottom: 8px;">Monitor</div>
+                        <ul style="font-size: 12px; margin: 0; padding-left: 15px;">
+                            <li>alu_stats_cb</li>
+                            <li>alu_protocol_check_cb</li>
+                        </ul>
+                    </div>
+                    <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px;">
+                        <div style="font-weight: 600; color: var(--accent-yellow); margin-bottom: 8px;">Scoreboard</div>
+                        <ul style="font-size: 12px; margin: 0; padding-left: 15px;">
+                            <li>alu_op_tracker_cb</li>
+                            <li>alu_compare_log_cb</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight success">
+                <div class="highlight-title">✓ Expected Results</div>
+                <p style="margin: 0; font-size: 14px;">
+                    <strong>UVM_ERROR: 0</strong> | <strong>SVA Violations: 0</strong> | <strong>Mismatches: 0</strong><br>
+                    All transactions processed correctly. All assertions pass. Full coverage achieved.
+                </p>
+            </div>
+        </section>
+
+        <!-- Backpressure Section -->
+        <section class="section" id="backpressure">
+            <div class="section-header">
+                <h2>🚦 Backpressure Testing</h2>
+                <p class="section-description">
+                    Random backpressure generation to stress test the DUT's flow control and FIFO mechanisms.
+                </p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon red">🚦</div>
+                        <div>
+                            <div class="card-title">Backpressure Configuration</div>
+                            <div class="card-subtitle">tb_top.sv</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 14px;">Random <code>resp_ready</code> deassertion to simulate slow consumers.</p>
+                    
+                    <h4>Plusargs</h4>
+                    <ul style="font-size: 13px;">
+                        <li><code>+BACKPRESSURE_EN=1</code> - Enable backpressure</li>
+                        <li><code>+BACKPRESSURE_PCT=30</code> - 30% chance of deassertion</li>
+                    </ul>
+
+                    <h4>Percentage Meaning</h4>
+                    <ul style="font-size: 13px;">
+                        <li><strong>0%</strong> - No backpressure (resp_ready always high)</li>
+                        <li><strong>30%</strong> - Light backpressure</li>
+                        <li><strong>50%</strong> - Medium backpressure</li>
+                        <li><strong>70%+</strong> - Heavy backpressure (stress test)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">📊</div>
+                        <div>
+                            <div class="card-title">Statistics Tracking</div>
+                            <div class="card-subtitle">End of Simulation Report</div>
+                        </div>
+                    </div>
+                    <div class="code-block" style="font-size: 11px;">############################################################
+           BACKPRESSURE STATISTICS                        
+############################################################
+
+  Backpressure Enabled    : YES
+  Configured Percentage   : 30%
+  Total Clock Cycles      : 25000
+  Cycles with Pressure    : 7500
+  Actual Pressure Rate    : 30.0%
+
+############################################################</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- File Structure Section -->
+        <section class="section" id="file-structure">
+            <div class="section-header">
+                <h2>📁 Project File Structure</h2>
+                <p class="section-description">
+                    Organized directory structure following UVM best practices.
+                </p>
+            </div>
+
+            <div class="file-tree">
+                <div class="file-tree-item">
+                    <span class="file-tree-name folder">uvm-alu-project/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">dut/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">dut.sv</span>
+                    <span class="file-tree-comment">// ALU Design Under Test</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">agent/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_item.sv</span>
+                    <span class="file-tree-comment">// Transaction class</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_driver.sv</span>
+                    <span class="file-tree-comment">// Driver with callback hooks</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_monitor.sv</span>
+                    <span class="file-tree-comment">// Monitor with callback hooks</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_sequencer.sv</span>
+                    <span class="file-tree-comment">// Sequencer</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_agent.sv</span>
+                    <span class="file-tree-comment">// Agent wrapper</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">scoreboard/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_scoreboard.sv</span>
+                    <span class="file-tree-comment">// Reference model + comparison</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">coverage/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_coverage.sv</span>
+                    <span class="file-tree-comment">// 8 covergroups</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">sequences/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_basesequence.sv</span>
+                    <span class="file-tree-comment">// Random sequence</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_stress_sequence.sv</span>
+                    <span class="file-tree-comment">// Stress sequence</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_coverage_sequence.sv</span>
+                    <span class="file-tree-comment">// Coverage-driven</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_regression_sequence.sv</span>
+                    <span class="file-tree-comment">// Virtual sequence</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">callbacks/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_callback_base.sv</span>
+                    <span class="file-tree-comment">// Base callback class</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_driver_callbacks.sv</span>
+                    <span class="file-tree-comment">// 4 driver callbacks</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_monitor_callbacks.sv</span>
+                    <span class="file-tree-comment">// 3 monitor callbacks</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_scoreboard_callbacks.sv</span>
+                    <span class="file-tree-comment">// 4 scoreboard callbacks</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">sva/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_assertions.sv</span>
+                    <span class="file-tree-comment">// 11 SVA assertions</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">env/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_env.sv</span>
+                    <span class="file-tree-comment">// Environment</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">test/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_test.sv</span>
+                    <span class="file-tree-comment">// Basic test</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_stress_test.sv</span>
+                    <span class="file-tree-comment">// Stress test</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_coverage_test.sv</span>
+                    <span class="file-tree-comment">// Coverage test</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_regression_test.sv</span>
+                    <span class="file-tree-comment">// Regression test</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">alu_callback_test.sv</span>
+                    <span class="file-tree-comment">// Callback demo</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">alu_full_regression_test.sv</span>
+                    <span class="file-tree-comment">// Full regression</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name folder">scripts/Run/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">run.py</span>
+                    <span class="file-tree-comment">// QuestaSim runner</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   ├──</span>
+                    <span class="file-tree-name">compile.do</span>
+                    <span class="file-tree-comment">// Compile script</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">│   └──</span>
+                    <span class="file-tree-name">elaborate.do</span>
+                    <span class="file-tree-comment">// Elaborate script</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name">alu_if.sv</span>
+                    <span class="file-tree-comment">// Interface</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name">alu_pkg.sv</span>
+                    <span class="file-tree-comment">// Package</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">├──</span>
+                    <span class="file-tree-name">tb_top.sv</span>
+                    <span class="file-tree-comment">// Testbench top</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">└──</span>
+                    <span class="file-tree-name folder">docs/</span>
+                </div>
+                <div class="file-tree-item">
+                    <span class="file-tree-indent">    └──</span>
+                    <span class="file-tree-name">project_demo.html</span>
+                    <span class="file-tree-comment">// This file</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commands Section -->
+        <section class="section" id="commands">
+            <div class="section-header">
+                <h2>💻 Run Commands</h2>
+                <p class="section-description">
+                    Quick reference for running simulations with the QuestaSim-based run script.
+                </p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Command</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py</code></td>
+                        <td>Run default test (alu_test)</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --test alu_stress_test</code></td>
+                        <td>Run stress test</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --test alu_coverage_test</code></td>
+                        <td>Run coverage test</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --test alu_full_regression_test</code></td>
+                        <td>Run full regression with callbacks</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --test alu_callback_test</code></td>
+                        <td>Run callback demo test</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --gui</code></td>
+                        <td>Run with QuestaSim GUI</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --coverage-report</code></td>
+                        <td>Generate coverage report</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --backpressure 50</code></td>
+                        <td>Enable 50% backpressure</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --seed 12345</code></td>
+                        <td>Run with specific seed</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --list</code></td>
+                        <td>List available tests</td>
+                    </tr>
+                    <tr>
+                        <td><code>python run.py --clean</code></td>
+                        <td>Clean simulation artifacts</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="highlight">
+                <div class="highlight-title">💡 Example Full Regression</div>
+                <div class="code-block" style="margin: 0; font-size: 13px;">cd scripts/Run
+python run.py --test alu_full_regression_test --coverage-report --backpressure 30</div>
+            </div>
+        </section>
+
+        <!-- Footer with Signature -->
+        <div class="footer-signature">
+            <div style="font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px;">
+                ALU UVM Verification Project
+            </div>
+            <div style="color: var(--text-secondary); font-size: 16px; margin-bottom: 25px;">
+                Complete UVM Environment | QuestaSim | SystemVerilog
+            </div>
+            <div style="border-top: 1px solid var(--border); padding-top: 25px; margin-top: 25px;">
+                <div style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                    Assaf Afriat
+                </div>
+                <div style="color: var(--text-muted); font-size: 14px;">
+                    February 2026
+                </div>
+            </div>
+            <div style="margin-top: 30px;">
+                <span class="author-badge">👤 Designed & Implemented by Assaf Afriat</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Update active state
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Update active nav on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section, .hero');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
